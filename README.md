@@ -15,7 +15,7 @@ A Chrome extension (Manifest V3) that blurs messages, the chat list, and media c
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/blur-mode.git
+   git clone https://github.com/ibrahimakcayy/blur-mode-for-whatsapp-web.git
    ```
 2. Go to `chrome://extensions` in Chrome.
 3. Enable **Developer mode** in the top right.
