@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Blur Mode</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <h1>Blur Mode</h1>
+
+  <div class="toggle-row">
+    <span id="stateLabel">Status: OFF</span>
+    <label class="switch">
+      <input id="toggleBtn" type="checkbox">
+      <span  class="slider round"></span>
+    </label>
+  </div>
+
+  <label for="blurAmount">Blur intensity (px)</label>
+  <input type="number" id="blurAmount" min="0" max="30" step="1">
+
+  <div class="selector-group">
+    <div class="selector-group-title">Elements to apply blur to</div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="sel-msg" value='[data-testid="msg-container"]'>
+      <label for="sel-msg">Messages</label>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="sel-convheader" value='[data-testid="conversation-info-header"]'>
+      <label for="sel-convheader">Contact Name</label>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="sel-cellframe" value='[data-testid="cell-frame-title"]'>
+      <label for="sel-cellframe">Names</label>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="sel-gridcell" value='[role="gridcell"]'>
+      <label for="sel-gridcell">Conversation List</label>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="sel-img" value="img">
+      <label for="sel-img">Images</label>
+    </div>
+  </div>
+
+  <button id="save">Save</button>
+  <div id="status"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

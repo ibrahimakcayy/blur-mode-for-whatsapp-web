@@ -1,0 +1,39 @@
+{
+"manifest_version": 3,
+"name": "Blur Mode",
+"description": "Enable blur mode on Whatsapp Web to hide message and content.",
+"version": "1.0",
+"icons": {
+  "16": "bos.png",
+  "32": "bos.png",
+  "48": "bos.png",
+  "128": "bos.png"
+},
+
+"background": {
+  "service_worker": "background.js",
+  "type": "module"
+},
+
+"action": {
+  "default_icon": "bos.png",
+  "default_popup": "options.html"
+},
+
+"content_security_policy": {
+  "extension_pages": "script-src 'self'; object-src 'self';",
+  "sandbox": "sandbox allow-scripts allow-forms allow-popups allow-modals; script-src 'self' 'unsafe-inline' 'unsafe-eval'; child-src 'self';"
+},
+
+"host_permissions": ["https://web.whatsapp.com/*"],
+"permissions": ["scripting", "activeTab", "webNavigation", "storage"],
+"commands": {
+  "toggle-focus": {
+    "suggested_key": {
+      "default": "Ctrl+B",
+      "mac": "Command+B"
+  },
+  "description": "Open Blur Mode Options"
+  }
+}
+}
