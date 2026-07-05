@@ -1,59 +1,59 @@
 # Blur Mode 🫥
 
-WhatsApp Web'de mesajları, sohbet listesini ve medya içeriklerini bulanıklaştırarak ekranınızın etrafındaki gözlerden gizlemenizi sağlayan bir Chrome uzantısı (Manifest V3).
+A Chrome extension (Manifest V3) that blurs messages, the chat list, and media content on WhatsApp Web, keeping your screen private from prying eyes.
 
-## Özellikler
+## Features
 
-- 🔒 WhatsApp Web üzerinde mesaj balonlarını, sohbet listesini, kişi adlarını ve medya görsellerini bulanıklaştırır
-- 🎚️ Ayarlanabilir bulanıklık yoğunluğu (0–30px)
-- ✅ Popup üzerinden hangi öğelerin bulanıklaştırılacağını seçebilme (mesajlar, kişi adları, sohbet listesi, görseller vb.)
-- ⌨️ Klavye kısayolu ile aç/kapat (`Ctrl+B` / macOS'ta `Cmd+B`)
-- 🟢 Sekme bazlı durum takibi (badge ile ON/OFF göstergesi)
-- 💾 Ayarlar `chrome.storage.sync` ile senkronize saklanır
+- 🔒 Blurs message bubbles, the chat list, contact names, and media images on WhatsApp Web
+- 🎚️ Adjustable blur intensity (0–30px)
+- ✅ Choose which elements to blur from the popup (messages, contact names, chat list, images, etc.)
+- ⌨️ Keyboard shortcut to toggle on/off (`Ctrl+B` / `Cmd+B` on macOS)
+- 🟢 Per-tab state tracking (ON/OFF indicator via badge)
+- 💾 Settings are synced and stored using `chrome.storage.sync`
 
-## Kurulum (Geliştirici Modu)
+## Installation (Developer Mode)
 
-1. Bu depoyu klonlayın:
+1. Clone this repository:
    ```bash
-   git clone https://github.com/KULLANICI_ADIN/blur-mode.git
+   git clone https://github.com/YOUR_USERNAME/blur-mode.git
    ```
-2. Chrome'da `chrome://extensions` adresine gidin.
-3. Sağ üstten **Geliştirici modu**'nu (Developer mode) etkinleştirin.
-4. **Paketlenmemiş öğe yükle** (Load unpacked) butonuna tıklayın.
-5. Klonladığınız `blur-mode` klasörünü seçin.
-6. Uzantı simgesine tıklayarak popup'ı açın ve ayarları yapılandırın.
+2. Go to `chrome://extensions` in Chrome.
+3. Enable **Developer mode** in the top right.
+4. Click **Load unpacked**.
+5. Select the `blur-mode` folder you cloned.
+6. Click the extension icon to open the popup and configure your settings.
 
-## Kullanım
+## Usage
 
-- Uzantı simgesine tıklayıp açılan popup'tan **Status** anahtarını kullanarak bulanıklaştırmayı açıp kapatabilirsiniz.
-- **Blur intensity** alanından bulanıklık miktarını (px) ayarlayabilirsiniz.
-- Hangi öğelerin bulanıklaştırılacağını checkbox'lardan seçip **Save** ile kaydedebilirsiniz.
-- `Ctrl+B` (macOS: `Cmd+B`) kısayolu ile aktif sekmede hızlıca aç/kapat yapabilirsiniz.
+- Click the extension icon and use the **Status** toggle in the popup to turn blurring on or off.
+- Use the **Blur intensity** field to adjust the amount of blur (in px).
+- Select which elements to blur using the checkboxes, then click **Save**.
+- Use `Ctrl+B` (macOS: `Cmd+B`) to quickly toggle blurring on the active tab.
 
-## Proje Yapısı
+## Project Structure
 
 ```
 blur-mode/
-├── manifest.json      # Uzantı yapılandırması (Manifest V3)
-├── background.js      # Service worker: CSS enjeksiyonu, sekme/badge durumu, komutlar
-├── options.html        # Popup arayüzü
-├── script.js           # Popup mantığı (ayarları oku/yaz, toggle)
-├── style.css           # Popup stilleri
-├── blur-mode.css        # Referans/örnek statik CSS (bulanıklaştırma kuralları)
-└── bos.png             # Uzantı ikonu
+├── manifest.json      # Extension configuration (Manifest V3)
+├── background.js      # Service worker: CSS injection, tab/badge state, commands
+├── options.html        # Popup UI
+├── script.js           # Popup logic (read/write settings, toggle)
+├── style.css           # Popup styles
+├── blur-mode.css        # Reference/example static CSS (blur rules)
+└── bos.png             # Extension icon
 ```
 
-## Nasıl Çalışır?
+## How It Works
 
-1. `background.js`, sekme bir WhatsApp Web URL'sine gittiğinde `chrome.storage.sync`'ten ayarları okur.
-2. Seçilen selector'lara göre dinamik bir CSS string'i oluşturur (`filter: blur(Npx) !important;`).
-3. `chrome.scripting.insertCSS` ile bu CSS'i ilgili sekmeye enjekte eder; kapatıldığında `removeCSS` ile kaldırır.
-4. Enjekte edilen CSS, sekme bazlı olarak `chrome.storage.session` içinde tutulur, böylece hangi sekmede hangi CSS'in aktif olduğu takip edilir.
+1. `background.js` reads settings from `chrome.storage.sync` when a tab navigates to a WhatsApp Web URL.
+2. It builds a dynamic CSS string based on the selected selectors (`filter: blur(Npx) !important;`).
+3. It injects this CSS into the tab using `chrome.scripting.insertCSS`, and removes it with `removeCSS` when turned off.
+4. The injected CSS is tracked per tab in `chrome.storage.session`, so the extension knows which CSS is active on which tab.
 
-## Katkıda Bulunma
+## Contributing
 
-Pull request'ler ve issue'lar memnuniyetle karşılanır. Büyük değişiklikler için önce bir issue açıp neyi değiştirmek istediğinizi tartışmanız önerilir.
+Pull requests and issues are welcome. For major changes, please open an issue first to discuss what you'd like to change.
 
-## Lisans
+## License
 
 MIT
