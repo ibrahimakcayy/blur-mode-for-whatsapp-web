@@ -8,7 +8,7 @@ let rightClickedElement = null;
 document.addEventListener("contextmenu", (e) => {
   rightClickedElement = e.target;
   container = e.target.closest('[data-testid="msg-container"], [data-testid="quoted-message"], [role="gridcell"], [data-testid="cell-frame-title"], [data-testid="conversation-info-header"], [data-testid="contact-info-subtitle selectable-text"], [data-testid="chat-info-drawer"] [dir="auto"], [data-testid="media-canvas-img"], img');
-  if (container){
+  if (container && container.getAttribute("data-focus-mode-right-clicked") !== "true") {
     container.setAttribute("data-focus-mode-right-clicked", "true")
   }
 
