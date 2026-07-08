@@ -4,14 +4,17 @@
 
 let rightClickedElement = null;
 
-// 1. Sağ tık anında hedef elementi yakala
+//right click catch the element
 document.addEventListener("contextmenu", (e) => {
   rightClickedElement = e.target;
   container = e.target.closest('[data-testid="msg-container"], [data-testid="quoted-message"], [role="gridcell"], [data-testid="cell-frame-title"], [data-testid="conversation-info-header"], [data-testid="contact-info-subtitle selectable-text"], [data-testid="chat-info-drawer"] [dir="auto"], [data-testid="media-canvas-img"], img');
-  container.setAttribute("data-focus-mode-right-clicked", "true")
+  if (container){
+    container.setAttribute("data-focus-mode-right-clicked", "true")
+  }
+
 }, true);
 
-// 2. Menü DOM'a eklendiğinde/güncellendiğinde yakala
+//if menu is opened, inject the new item
 const observer = new MutationObserver(() => {
   const menu = document.querySelector('[data-menu-content="true"]');
   if (!menu) return;
