@@ -5,6 +5,7 @@ const DEFAULTS = {
   blurAmount: 5,
   selectors: [
     '[data-testid="msg-container"]',
+    '[data-testid="quoted-message"]',
     '[role="gridcell"]',
     '[data-testid="cell-frame-title"]',
     '[data-testid="conversation-info-header"]',
@@ -27,7 +28,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const settings = await chrome.storage.sync.get(DEFAULTS);
   //if checkboxes checked add the selectors to the settings.selectors array
   if (document.getElementById('sel-msg')) {
-    document.getElementById('sel-msg').checked = settings.selectors.includes('[data-testid="msg-container"]');
+    document.getElementById('sel-msg').checked = [
+      '[data-testid="quoted-message"]',
+      '[data-testid="msg-container"]',
+    ].some(sel => settings.selectors.includes(sel));
   }
 
   if (document.getElementById('sel-convheader')) {
@@ -81,7 +85,7 @@ document.getElementById('save').addEventListener('click', async () => {
   let selectors = [];
   //check if the checkboxes are checked and add the selectors to the selectors array
   if (document.getElementById('sel-msg')?.checked) {
-    selectors = [...selectors, '[data-testid="msg-container"]'];
+    selectors = [...selectors, '[data-testid="msg-container"]', '[data-testid="quoted-message"]'];
   }
 
   if (document.getElementById('sel-convheader')?.checked) {
