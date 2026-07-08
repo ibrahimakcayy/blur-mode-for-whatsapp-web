@@ -8,6 +8,7 @@ chrome.runtime.onInstalled.addListener(() => {
     blurAmount: 5,
     selectors: [
       '[data-testid="msg-container"]',
+      '[data-testid="quoted-message"]',
       '[role="gridcell"]',
       '[data-testid="cell-frame-title"]',
       '[data-testid="conversation-info-header"]',
@@ -39,6 +40,7 @@ async function getSettings() {
     blurAmount: 5,
     selectors: [
       '[data-testid="msg-container"]',
+      '[data-testid="quoted-message"]',
       '[role="gridcell"]',
       '[data-testid="cell-frame-title"]',
       '[data-testid="conversation-info-header"]',
@@ -55,6 +57,7 @@ function buildCss(blurAmount, selectors) {
   if (!selectors || selectors.length === 0) return '';
   return `
 ${selectors.join(',\n')} {
+
   filter: blur(${blurAmount}px) !important;
 }`;
 }
