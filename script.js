@@ -6,7 +6,7 @@ const DEFAULTS = {
   selectors: [
     '[data-testid="msg-container"]',
     '[data-testid="quoted-message"]',
-    '[role="gridcell"]',
+    '[data-testid="last-msg-status"]',
     '[data-testid="cell-frame-title"]',
     '[data-testid="conversation-info-header"]',
     '[data-testid="contact-info-subtitle selectable-text"]',
@@ -16,7 +16,7 @@ const DEFAULTS = {
   ]
 };
 
-const CHECKBOX_IDS = ['sel-msg', 'sel-gridcell', 'sel-cellframe', 'sel-convheader', 'sel-img'];
+const CHECKBOX_IDS = ['sel-msg', 'sel-cellframe', 'sel-convheader', 'sel-img'];
 
 let currentTab = null;
 
@@ -29,8 +29,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   //if checkboxes checked add the selectors to the settings.selectors array
   if (document.getElementById('sel-msg')) {
     document.getElementById('sel-msg').checked = [
-      '[data-testid="quoted-message"]',
       '[data-testid="msg-container"]',
+      '[data-testid="quoted-message"]',
+      '[data-testid="last-msg-status"]'
     ].some(sel => settings.selectors.includes(sel));
   }
 
@@ -44,10 +45,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   if (document.getElementById('sel-cellframe')) {
     document.getElementById('sel-cellframe').checked = settings.selectors.includes('[data-testid="cell-frame-title"]');
-  }
-
-  if (document.getElementById('sel-gridcell')) {
-    document.getElementById('sel-gridcell').checked = settings.selectors.includes('[role="gridcell"]');
   }
 
   if (document.getElementById('sel-img')) {
@@ -85,7 +82,9 @@ document.getElementById('save').addEventListener('click', async () => {
   let selectors = [];
   //check if the checkboxes are checked and add the selectors to the selectors array
   if (document.getElementById('sel-msg')?.checked) {
-    selectors = [...selectors, '[data-testid="msg-container"]', '[data-testid="quoted-message"]'];
+    selectors = [...selectors, '[data-testid="msg-container"]', 
+      '[data-testid="quoted-message"]',
+      '[data-testid="last-msg-status"]'];
   }
 
   if (document.getElementById('sel-convheader')?.checked) {
