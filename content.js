@@ -7,7 +7,7 @@ let rightClickedElement = null;
 //right click catch the element
 document.addEventListener("contextmenu", (e) => {
   rightClickedElement = e.target;
-  container = e.target.closest('[data-testid="msg-container"], [data-testid="quoted-message"], [role="gridcell"], [data-testid="last-msg-status"], [data-testid="cell-frame-title"], [data-testid="conversation-info-header"], [data-testid="contact-info-subtitle selectable-text"], [data-testid="chat-info-drawer"] [dir="auto"], [data-testid="media-canvas-img"], img');
+  container = e.target.closest('[data-testid="msg-container"], [data-testid="quoted-message"], [data-testid="last-msg-status"], [data-testid="cell-frame-title"], [data-testid="conversation-info-header"], [data-testid="contact-info-subtitle selectable-text"], [data-testid="chat-info-drawer"] [dir="auto"], [data-testid="media-canvas-img"], img');
   if (container && container.getAttribute("data-blur-mode-activeted") === null) {
     container.setAttribute("data-blur-mode-activeted", "false");
   }
@@ -29,14 +29,23 @@ const observer = new MutationObserver(() => {
 
   menu.dataset.focusModeInjected = "true";
 
+  //blur this section button
   const clonedItem = existingItem.cloneNode(true);
   clonedItem.setAttribute("aria-label", "Blur this element");
 
   clonedItem.setAttribute("tabindex", "-1");
   clonedItem.querySelector('span').removeAttribute("aria-checked");
   clonedItem.querySelectorAll('span')[0].textContent = "";
-  clonedItem.querySelectorAll('span')[1].textContent = "Blur this section";
-  
+  const filterValue = container ? getComputedStyle(container).filter : null;
+  const hasActiveFilter = filterValue && filterValue !== "none";
+
+  if (container && (container.getAttribute("data-blur-mode-activeted") === "true" || hasActiveFilter)) {
+    clonedItem.querySelectorAll('span')[1].textContent = "Unblur this section";
+  } else {
+    clonedItem.querySelectorAll('span')[1].textContent = "Blur this section";
+  }
+
+  //unblur all sections button
   const clonedItem1 = existingItem.cloneNode(true);
   clonedItem1.setAttribute("aria-label", "Unblur this element");
 
@@ -45,31 +54,41 @@ const observer = new MutationObserver(() => {
   clonedItem1.querySelectorAll('span')[0].textContent = "";
   clonedItem1.querySelectorAll('span')[1].textContent = "Unblur all sections";
 
+  //lock this section button
   const clonedItem2 = existingItem.cloneNode(true);
   clonedItem2.setAttribute("aria-label", "Lock this element state");
 
   clonedItem2.setAttribute("tabindex", "-1");
   clonedItem2.querySelector('span').removeAttribute("aria-checked");
   clonedItem2.querySelectorAll('span')[0].textContent = "";
-  clonedItem2.querySelectorAll('span')[1].textContent = "Lock this element state";
 
+  if (container && container.getAttribute("data-blur-mode-locked") === "true") {
+    clonedItem2.querySelectorAll('span')[1].textContent = "Unlock this element state";
+  } else {
+  clonedItem2.querySelectorAll('span')[1].textContent = "Lock this element state";
+  }
+
+  //blur button click blur the closest section
   clonedItem.addEventListener("click", () => {
     if (container) {
       //alert(`${getComputedStyle(container).filter}`);
-      if (container.getAttribute("data-blur-mode-activeted") === "false") {
+      if (container.getAttribute("data-blur-mode-activeted") === "true" || hasActiveFilter){
+        //alert(`${container.style.getPropertyValue("filter")}`);
+        container.style.setProperty("filter", "blur(0px)", "important");
+        container.style.removeProperty("filter");
+        container.removeAttribute("data-blur-mode-activeted");
+        clonedItem.querySelectorAll('span')[1].textContent = "Blur this section";
+      }else{
         //alert(`${container.style.getProperty("filter")}`);
         container.style.setProperty("filter", "blur(8px)", "important");
         container.setAttribute("data-blur-mode-activeted", "true");
+        clonedItem.querySelectorAll('span')[1].textContent = "Unblur this section";
       
-      } else {
-        
-        //alert(`${container.style.getPropertyValue("filter")}`);
-        container.style.removeProperty("filter");
-        container.removeAttribute("data-blur-mode-activeted");
       }
   }
   });
 
+  //unblur all blur section events
   clonedItem1.addEventListener("click", () => {
 
     const blurredElements = document.querySelectorAll('[data-blur-mode-activeted="true"]');
@@ -79,10 +98,20 @@ const observer = new MutationObserver(() => {
     });
   });
 
+  //lockt the statement of the section
   clonedItem2.addEventListener("click", () => {
-    alert("badge");
+    if (container.getAttribute("data-blur-mode-locked") === "true") {
+      container.removeAttribute("data-blur-mode-locked");
+      container.style.removeProperty("filter");
+      clonedItem2.querySelectorAll('span')[1].textContent = "Lock this element state";
+    } else {
+      container.setAttribute("data-blur-mode-locked", "true");
+      container.style.setProperty("filter", getComputedStyle(container).filter, "important");
+      clonedItem2.querySelectorAll('span')[1].textContent = "Unlock this element state";
+    }
   });
 
+  //add the last row of the menu
   existingItem.parentElement.insertAdjacentElement('afterend', clonedItem);
   existingItem.parentElement.insertAdjacentElement('afterend', clonedItem1);
   existingItem.parentElement.insertAdjacentElement('afterend', clonedItem2);
