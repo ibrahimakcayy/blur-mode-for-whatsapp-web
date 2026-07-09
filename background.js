@@ -97,7 +97,7 @@ async function applyState(tabId, nextState) {
     if (!cssString) return;
     try {
       await chrome.scripting.insertCSS({ css: cssString, target: { tabId } });
-      await setInjectedCss(tabId, cssString);
+      await setInjectedCss(tabId, cssString)
       console.log('[applyState] insertCSS SUCCESS:', tabId);
     } catch (err) {
       console.error('[applyState] insertCSS FAILED:', err.message);
