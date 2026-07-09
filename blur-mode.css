@@ -8,5 +8,5 @@
 [data-testid="chat-info-drawer"] [dir="auto"],
 [data-testid="media-canvas-img"],
 img{
-  filter: blur(5px) !important;
+  filter: blur(5px);
 }
