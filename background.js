@@ -1,4 +1,7 @@
-// background.js
+// ==============================
+// Blur Mode - background.js
+// ==============================
+
 //set default badge text to OFF when the extension is installed
 chrome.runtime.onInstalled.addListener(() => {
   chrome.action.setBadgeText({ text: 'OFF' });
@@ -10,7 +13,6 @@ chrome.runtime.onInstalled.addListener(() => {
       '[data-testid="msg-container"]',
       '[data-testid="quoted-message"]',
       '[data-testid="last-msg-status"]',
-      '[role="gridcell"]',
       '[data-testid="cell-frame-title"]',
       '[data-testid="conversation-info-header"]',
       '[data-testid="contact-info-subtitle selectable-text"]',
@@ -43,7 +45,6 @@ async function getSettings() {
       '[data-testid="msg-container"]',
       '[data-testid="quoted-message"]',
       '[data-testid="last-msg-status"]',
-      '[role="gridcell"]',
       '[data-testid="cell-frame-title"]',
       '[data-testid="conversation-info-header"]',
       '[data-testid="contact-info-subtitle selectable-text"]',
