@@ -1,7 +1,6 @@
 /* blur-mode.css for blur mode this page is useless*/
 [data-testid="msg-container"],
 [data-testid="quoted-message"],
-[role="gridcell"],
 [data-testid="cell-frame-title"],
 [data-testid="conversation-info-header"],
 [data-testid="contact-info-subtitle selectable-text"],
