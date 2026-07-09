@@ -1,4 +1,6 @@
-// script.js for options popup
+// ==============================
+// Blur Mode - script.js-options menu
+// ==============================
 //set defaults for the extension settings and selectors to blur
 const DEFAULTS = {
   siteUrl: 'https://web.whatsapp.com/',
