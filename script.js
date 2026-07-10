@@ -7,7 +7,7 @@ const SELECTOR_GROUPS = {
   'sel-msg': [
     '[data-testid="msg-container"]',
     '[data-testid="quoted-message"]',
-    '[data-testid="last-msg-status"]'
+    //'[data-testid="last-msg-status"]'
   ],
   'sel-convheader': [
     '[data-testid="conversation-info-header"]',
