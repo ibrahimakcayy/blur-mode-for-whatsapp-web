@@ -3,15 +3,20 @@
 // ==============================
 
 let rightClickedElement = null;
+let container = null;
 
 //right click catch the element
 document.addEventListener("contextmenu", (e) => {
   rightClickedElement = e.target;
-  container = e.target.closest('[data-testid="msg-container"], [data-testid="quoted-message"], [data-testid="last-msg-status"], [data-testid="cell-frame-title"], [data-testid="conversation-info-header"], [data-testid="contact-info-subtitle selectable-text"], [data-testid="chat-info-drawer"] [dir="auto"], [data-testid="media-canvas-img"], img');
-  if (container && container.getAttribute("data-blur-mode-activeted") === null) {
+  container = e.target.closest(
+    '[data-testid="msg-container"], [data-testid="quoted-message"], [data-testid="last-msg-status"], [data-testid="cell-frame-title"], [data-testid="cell-frame-primary-detail"], [data-testid="cell-frame-secondary"], [data-testid="conversation-info-header"], [data-testid="contact-info-subtitle selectable-text"], [data-testid="chat-info-drawer"] [dir="auto"], [data-testid="media-canvas-img"], img'
+  );
+
+  if (!container) return;
+
+  if (container.getAttribute("data-blur-mode-activeted") === null) {
     container.setAttribute("data-blur-mode-activeted", "false");
   }
-
 }, true);
 
 //if menu is opened, inject the new item
@@ -24,22 +29,24 @@ const observer = new MutationObserver(() => {
   const items = menu.querySelectorAll('button[role="menuitem"]');
   if (!items.length) return;
 
-  //items.length - 1
   const existingItem = items[0];
-
   menu.dataset.focusModeInjected = "true";
+
+  if (!container) return;
+
+  const filterValue = getComputedStyle(container).filter;
+  const hasActiveFilterAtOpen = !!(filterValue && filterValue !== "none");
 
   //blur this section button
   const clonedItem = existingItem.cloneNode(true);
   clonedItem.setAttribute("aria-label", "Blur this element");
-
   clonedItem.setAttribute("tabindex", "-1");
   clonedItem.querySelector('span').removeAttribute("aria-checked");
   clonedItem.querySelectorAll('span')[0].textContent = "";
-  const filterValue = container ? getComputedStyle(container).filter : null;
-  const hasActiveFilter = filterValue && filterValue !== "none";
 
-  if (container && (container.getAttribute("data-blur-mode-activeted") === "true" || hasActiveFilter)) {
+  const activetedAttr = container.getAttribute("data-blur-mode-activeted") === "true";
+
+  if (activetedAttr || hasActiveFilterAtOpen) {
     clonedItem.querySelectorAll('span')[1].textContent = "Unblur this section";
   } else {
     clonedItem.querySelectorAll('span')[1].textContent = "Blur this section";
@@ -48,7 +55,6 @@ const observer = new MutationObserver(() => {
   //unblur all sections button
   const clonedItem1 = existingItem.cloneNode(true);
   clonedItem1.setAttribute("aria-label", "Unblur this element");
-
   clonedItem1.setAttribute("tabindex", "-1");
   clonedItem1.querySelector('span').removeAttribute("aria-checked");
   clonedItem1.querySelectorAll('span')[0].textContent = "";
@@ -57,40 +63,38 @@ const observer = new MutationObserver(() => {
   //lock this section button
   const clonedItem2 = existingItem.cloneNode(true);
   clonedItem2.setAttribute("aria-label", "Lock this element state");
-
   clonedItem2.setAttribute("tabindex", "-1");
   clonedItem2.querySelector('span').removeAttribute("aria-checked");
   clonedItem2.querySelectorAll('span')[0].textContent = "";
 
-  if (container && container.getAttribute("data-blur-mode-locked") === "true") {
+  if (container.getAttribute("data-blur-mode-locked") === "true") {
     clonedItem2.querySelectorAll('span')[1].textContent = "Unlock this element state";
   } else {
-  clonedItem2.querySelectorAll('span')[1].textContent = "Lock this element state";
+    clonedItem2.querySelectorAll('span')[1].textContent = "Lock this element state";
   }
 
   //blur button click blur the closest section
   clonedItem.addEventListener("click", () => {
-    if (container) {
-      //alert(`${getComputedStyle(container).filter}`);
-      if (container.getAttribute("data-blur-mode-activeted") === "true" || hasActiveFilter){
-        //alert(`${container.style.getPropertyValue("filter")}`);
-        container.style.setProperty("filter", "blur(0px)", "important");
-        container.style.removeProperty("filter");
-        container.removeAttribute("data-blur-mode-activeted");
-        clonedItem.querySelectorAll('span')[1].textContent = "Blur this section";
-      }else{
-        //alert(`${container.style.getProperty("filter")}`);
-        container.style.setProperty("filter", "blur(8px)", "important");
-        container.setAttribute("data-blur-mode-activeted", "true");
-        clonedItem.querySelectorAll('span')[1].textContent = "Unblur this section";
-      
-      }
-  }
+    if (!container) return;
+
+    const currentFilter = getComputedStyle(container).filter;
+    const currentlyActive =
+      container.getAttribute("data-blur-mode-activeted") === "true" ||
+      (currentFilter && currentFilter !== "none");
+
+    if (currentlyActive) {
+      container.style.removeProperty("filter");
+      container.removeAttribute("data-blur-mode-activeted");
+      clonedItem.querySelectorAll('span')[1].textContent = "Blur this section";
+    } else {
+      container.style.setProperty("filter", "blur(8px)", "important");
+      container.setAttribute("data-blur-mode-activeted", "true");
+      clonedItem.querySelectorAll('span')[1].textContent = "Unblur this section";
+    }
   });
 
   //unblur all blur section events
   clonedItem1.addEventListener("click", () => {
-
     const blurredElements = document.querySelectorAll('[data-blur-mode-activeted="true"]');
     blurredElements.forEach((el) => {
       el.style.removeProperty("filter");
@@ -98,8 +102,10 @@ const observer = new MutationObserver(() => {
     });
   });
 
-  //lockt the statement of the section
+  //lock the state of the section
   clonedItem2.addEventListener("click", () => {
+    if (!container) return;
+
     if (container.getAttribute("data-blur-mode-locked") === "true") {
       container.removeAttribute("data-blur-mode-locked");
       container.style.removeProperty("filter");
