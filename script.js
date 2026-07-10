@@ -10,6 +10,8 @@ const DEFAULTS = {
     '[data-testid="quoted-message"]',
     '[data-testid="last-msg-status"]',
     '[data-testid="cell-frame-title"]',
+    '[data-testid="cell-frame-primary-detail"]',
+    '[data-testid="cell-frame-secondary"]',
     '[data-testid="conversation-info-header"]',
     '[data-testid="contact-info-subtitle selectable-text"]',
     '[data-testid="chat-info-drawer"] [dir="auto"]',
@@ -18,7 +20,7 @@ const DEFAULTS = {
   ]
 };
 
-const CHECKBOX_IDS = ['sel-msg', 'sel-cellframe', 'sel-convheader', 'sel-img'];
+const CHECKBOX_IDS = ['sel-msg', 'sel-grid', 'sel-cellframe', 'sel-convheader', 'sel-img'];
 
 let currentTab = null;
 
@@ -45,6 +47,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     ].some(sel => settings.selectors.includes(sel));
   }
   
+    if (document.getElementById('sel-grid')) {
+    document.getElementById('sel-grid').checked = [
+      '[data-testid="cell-frame-title"]',
+      '[data-testid="cell-frame-secondary"]',
+      '[data-testid="cell-frame-primary-detail"]',
+      '[data-testid="last-msg-status"]',
+      'img',
+    ].some(sel => settings.selectors.includes(sel));
+  }
+  
+
   if (document.getElementById('sel-cellframe')) {
     document.getElementById('sel-cellframe').checked = settings.selectors.includes('[data-testid="cell-frame-title"]');
   }
@@ -97,12 +110,18 @@ document.getElementById('save').addEventListener('click', async () => {
     ];
   }
 
-  if (document.getElementById('sel-cellframe')?.checked) {
-    selectors = [...selectors, '[data-testid="cell-frame-title"]'];
+  if (document.getElementById('sel-grid')?.checked) {
+    selectors = [...selectors,
+      '[data-testid="cell-frame-title"]',
+      '[data-testid="cell-frame-secondary"]',
+      '[data-testid="cell-frame-primary-detail"]',
+      '[data-testid="last-msg-status"]',
+      'img',
+    ];
   }
 
-  if (document.getElementById('sel-gridcell')?.checked) {
-    selectors = [...selectors, '[role="gridcell"]'];
+  if (document.getElementById('sel-cellframe')?.checked) {
+    selectors = [...selectors, '[data-testid="cell-frame-title"]'];
   }
 
   if (document.getElementById('sel-img')?.checked) {
