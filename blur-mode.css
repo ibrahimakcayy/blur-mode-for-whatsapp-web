@@ -4,11 +4,14 @@
 [data-testid="last-msg-status"],
 [data-testid="cell-frame-title"],
 [data-testid="cell-frame-primary-detail"],
+[role="gridcell"] img,
+[data-testid="conversation-header"] img,
+[data-testid="chat-info-drawer"] img,
 [data-testid="cell-frame-secondary"],
 [data-testid="conversation-info-header"],
 [data-testid="contact-info-subtitle selectable-text"],
 [data-testid="chat-info-drawer"] [dir="auto"],
-[data-testid="media-canvas-img"],
+[data-testid="media-canvas-img"]
 img{
   filter: blur(5px);
 }
