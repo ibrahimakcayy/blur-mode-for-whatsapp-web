@@ -1,7 +1,10 @@
 /* blur-mode.css for blur mode this page is useless*/
 [data-testid="msg-container"],
 [data-testid="quoted-message"],
+[data-testid="last-msg-status"],
 [data-testid="cell-frame-title"],
+[data-testid="cell-frame-primary-detail"],
+[data-testid="cell-frame-secondary"],
 [data-testid="conversation-info-header"],
 [data-testid="contact-info-subtitle selectable-text"],
 [data-testid="chat-info-drawer"] [dir="auto"],
