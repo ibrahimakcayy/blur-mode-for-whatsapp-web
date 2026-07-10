@@ -12,7 +12,7 @@ chrome.runtime.onInstalled.addListener(() => {
     selectors: [
       '[data-testid="msg-container"]',
       '[data-testid="quoted-message"]',
-      '[data-testid="last-msg-status"]',
+      //'[data-testid="last-msg-status"]',
       '[data-testid="cell-frame-title"]',
       '[data-testid="cell-frame-primary-detail"]',
       '[data-testid="cell-frame-secondary"]',
@@ -49,7 +49,7 @@ async function getSettings() {
     selectors: [
       '[data-testid="msg-container"]',
       '[data-testid="quoted-message"]',
-      '[data-testid="last-msg-status"]',
+      //'[data-testid="last-msg-status"]',
       '[data-testid="cell-frame-title"]',
       '[data-testid="cell-frame-primary-detail"]',
       '[data-testid="cell-frame-secondary"]',
