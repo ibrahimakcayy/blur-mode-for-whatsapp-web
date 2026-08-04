@@ -157,6 +157,7 @@ chrome.commands.onCommand.addListener(async (command) => {
   if (!activeTab || !isInjectableUrl(activeTab.url)) return;
 
   const { siteUrl } = await getSettings();
+  //if you want to work this shortcut for every website delete this if line
   if (!activeTab.url.startsWith(siteUrl)) return;
 
   const badge = await chrome.action.getBadgeText({ tabId: activeTab.id });
