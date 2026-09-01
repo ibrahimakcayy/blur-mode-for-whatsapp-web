@@ -2,7 +2,7 @@
 // Blur Mode - script.js (options menu)
 // ==============================
 
-// Her checkbox için ayrı, kendi kapsamındaki selector grubu
+// Separate selector group per checkbox, each with its own scope
 const SELECTOR_GROUPS = {
   'sel-msg': [
     '[data-testid="msg-container"]',
@@ -13,6 +13,7 @@ const SELECTOR_GROUPS = {
     '[data-testid="conversation-info-header"]',
     '[data-testid="conversation-header"] img',
     '[data-testid="chat-info-drawer"] img',
+    '[data-testid="chat-info-drawer"] image',
     '[data-testid="contact-info-subtitle selectable-text"]',
     '[data-testid="chat-info-drawer"] [dir="auto"]'
   ],
@@ -36,7 +37,7 @@ const SELECTOR_GROUPS = {
 const DEFAULTS = {
   siteUrl: 'https://web.whatsapp.com/',
   blurAmount: 5,
-  // Artık selector array'i değil, hangi grupların açık olduğunu tutuyoruz
+  // No longer a flat selector array — now we store which groups are enabled
   enabledGroups: ['sel-msg', 'sel-grid', 'sel-cellframe', 'sel-convheader', 'sel-img']
 };
 
@@ -48,8 +49,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const settings = await chrome.storage.sync.get(DEFAULTS);
 
-  // Her checkbox kendi ID'sinin enabledGroups içinde olup olmadığına bakıyor
-  // -> artık başka bir checkbox'ın selector'ı yüzünden yanlışlıkla işaretlenmiyor
+  // Each checkbox checks whether its own ID is present in enabledGroups
+  // -> no longer gets checked by mistake because of another checkbox's selector
   Object.keys(SELECTOR_GROUPS).forEach(id => {
     const el = document.getElementById(id);
     if (el) {
@@ -80,7 +81,7 @@ document.getElementById('save').addEventListener('click', async () => {
   const siteUrl = "https://web.whatsapp.com/";
   const blurAmount = parseInt(document.getElementById('blurAmount').value, 10);
 
-  // Hangi checkbox'lar işaretli, onu topla
+  // Collect which checkboxes are checked
   const enabledGroups = Object.keys(SELECTOR_GROUPS).filter(
     id => document.getElementById(id)?.checked
   );
@@ -90,7 +91,7 @@ document.getElementById('save').addEventListener('click', async () => {
     return;
   }
 
-  // content script'in kullanacağı nihai selector listesini gruplardan türet ve dedupe et
+  // Derive the final selector list the content script will use from the groups, and dedupe it
   const selectors = [...new Set(
     enabledGroups.flatMap(id => SELECTOR_GROUPS[id])
   )];
@@ -98,8 +99,8 @@ document.getElementById('save').addEventListener('click', async () => {
   await chrome.storage.sync.set({
     siteUrl,
     blurAmount: isNaN(blurAmount) ? DEFAULTS.blurAmount : blurAmount,
-    enabledGroups,   // popup'ın checkbox durumlarını doğru yeniden yüklemesi için
-    selectors         // content script'in gerçekte blur uygulayacağı selector'lar
+    enabledGroups,   // so the popup can correctly reload checkbox states
+    selectors         // the selectors the content script will actually apply blur to
   });
 
   showStatus('SAVED ✓');
