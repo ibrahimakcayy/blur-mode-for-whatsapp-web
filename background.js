@@ -20,6 +20,7 @@ chrome.runtime.onInstalled.addListener(() => {
       '[data-testid="conversation-info-header"]',
       '[data-testid="conversation-header"] img',
       '[data-testid="chat-info-drawer"] img',
+      '[data-testid="chat-info-drawer"] image',
       '[data-testid="contact-info-subtitle selectable-text"]',
       '[data-testid="chat-info-drawer"] [dir="auto"]',
       '[data-testid="media-canvas-img"]',
@@ -57,6 +58,7 @@ async function getSettings() {
       '[data-testid="conversation-info-header"]',
       '[data-testid="conversation-header"] img',
       '[data-testid="chat-info-drawer"] img',
+      '[data-testid="chat-info-drawer"] image',
       '[data-testid="contact-info-subtitle selectable-text"]',
       '[data-testid="chat-info-drawer"] [dir="auto"]',
       '[data-testid="media-canvas-img"]',
@@ -158,7 +160,7 @@ chrome.commands.onCommand.addListener(async (command) => {
 
   const { siteUrl } = await getSettings();
   //if you want to work this shortcut for every website delete this if line
-  if (!activeTab.url.startsWith(siteUrl)) return;
+  //if (!activeTab.url.startsWith(siteUrl)) return;
 
   const badge = await chrome.action.getBadgeText({ tabId: activeTab.id });
   const nextState = badge === 'ON' ? 'OFF' : 'ON';
