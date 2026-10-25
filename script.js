@@ -37,6 +37,7 @@ const SELECTOR_GROUPS = {
 const DEFAULTS = {
   siteUrl: 'https://web.whatsapp.com/',
   blurAmount: 5,
+  autoEnable: true,
   // No longer a flat selector array — now we store which groups are enabled
   enabledGroups: ['sel-msg', 'sel-grid', 'sel-cellframe', 'sel-convheader', 'sel-img']
 };
@@ -46,8 +47,10 @@ let currentTab = null;
 document.addEventListener('DOMContentLoaded', async () => {
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
   currentTab = tabs[0];
-
   const settings = await chrome.storage.sync.get(DEFAULTS);
+  document.getElementById('blurAmount').value = settings.blurAmount;
+  const autoEl = document.getElementById('autoEnable');
+  if (autoEl) autoEl.checked = settings.autoEnable;
 
   // Each checkbox checks whether its own ID is present in enabledGroups
   // -> no longer gets checked by mistake because of another checkbox's selector
@@ -80,6 +83,7 @@ document.getElementById('toggleBtn').addEventListener('click', async () => {
 document.getElementById('save').addEventListener('click', async () => {
   const siteUrl = "https://web.whatsapp.com/";
   const blurAmount = parseInt(document.getElementById('blurAmount').value, 10);
+  const autoEnable = document.getElementById('autoEnable').checked;
 
   // Collect which checkboxes are checked
   const enabledGroups = Object.keys(SELECTOR_GROUPS).filter(
@@ -99,6 +103,7 @@ document.getElementById('save').addEventListener('click', async () => {
   await chrome.storage.sync.set({
     siteUrl,
     blurAmount: isNaN(blurAmount) ? DEFAULTS.blurAmount : blurAmount,
+    autoEnable,
     enabledGroups,   // so the popup can correctly reload checkbox states
     selectors         // the selectors the content script will actually apply blur to
   });
