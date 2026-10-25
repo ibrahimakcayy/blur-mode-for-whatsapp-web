@@ -9,6 +9,7 @@ chrome.runtime.onInstalled.addListener(() => {
   const defaults = {
     siteUrl: 'https://web.whatsapp.com/',
     blurAmount: 5,
+    autoEnable: true,
     selectors: [
       '[data-testid="msg-container"]',
       '[data-testid="quoted-message"]',
@@ -47,6 +48,7 @@ async function getSettings() {
   return await chrome.storage.sync.get({
     siteUrl: 'https://web.whatsapp.com/',
     blurAmount: 5,
+    autoEnable: true,
     selectors: [
       '[data-testid="msg-container"]',
       '[data-testid="quoted-message"]',
@@ -135,10 +137,12 @@ chrome.tabs.onRemoved.addListener(async (tabId) => {
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (changeInfo.status !== 'complete' || !isInjectableUrl(tab.url)) return;
 
-  const { siteUrl } = await getSettings();
+  const { siteUrl, autoEnable } = await getSettings();
   const isMatch = tab.url.startsWith(siteUrl);
 
-  await applyState(tabId, isMatch ? 'ON' : 'OFF');
+  await setInjectedCss(tabId, null);
+
+  await applyState(tabId, (isMatch && autoEnable) ? 'ON' : 'OFF');
 });
 
 
