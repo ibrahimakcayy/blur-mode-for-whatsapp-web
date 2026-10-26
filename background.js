@@ -103,48 +103,48 @@ async function setInjectedCss(tabId, cssStringOrNull) {
 async function applyState(tabId, nextState) {
   await chrome.action.setBadgeText({ tabId, text: nextState });
 
+  //always remove the old css first so styles can never stack up
   const existingCss = await getInjectedCss(tabId);
-
-  if (nextState === 'ON') {
-    if (existingCss) return;
-    const { blurAmount, selectors } = await getSettings();
-    const cssString = buildCss(blurAmount, selectors);
-    if (!cssString) return;
-    try {
-      await chrome.scripting.insertCSS({ css: cssString, target: { tabId } });
-      await setInjectedCss(tabId, cssString)
-      console.log('[applyState] insertCSS SUCCESS:', tabId);
-    } catch (err) {
-      console.error('[applyState] insertCSS FAILED:', err.message);
-    }
-  } else {
-    if (!existingCss) return;
+  if (existingCss) {
     try {
       await chrome.scripting.removeCSS({ css: existingCss, target: { tabId } });
-      await setInjectedCss(tabId, null);
-      console.log('[applyState] removeCSS SUCCESS:', tabId);
     } catch (err) {
-      console.error('[applyState] removeCSS FAILED:', err.message);
+      //if the page was reloaded the css is already gone, so this is fine
+      console.warn('[applyState] removeCSS skipped:', err.message);
     }
+    await setInjectedCss(tabId, null);
+  }
+
+  //OFF: nothing more to do
+  if (nextState !== 'ON') return;
+
+  //ON: inject a fresh copy using the latest settings
+  const { blurAmount, selectors } = await getSettings();
+  const cssString = buildCss(blurAmount, selectors);
+  if (!cssString) return;
+
+  try {
+    await chrome.scripting.insertCSS({ css: cssString, target: { tabId } });
+    await setInjectedCss(tabId, cssString);
+    console.log('[applyState] insertCSS SUCCESS:', tabId);
+  } catch (err) {
+    console.error('[applyState] insertCSS FAILED:', err.message);
   }
 }
-
 chrome.tabs.onRemoved.addListener(async (tabId) => {
   await setInjectedCss(tabId, null);
 });
 
-//if the tab is updated and the url is whatsapp, apply the state based on the settings
+//if the tab finished loading, apply the state based on the url and the auto-enable setting
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (changeInfo.status !== 'complete' || !isInjectableUrl(tab.url)) return;
 
   const { siteUrl, autoEnable } = await getSettings();
   const isMatch = tab.url.startsWith(siteUrl);
 
-  await setInjectedCss(tabId, null);
-
+  //ON only if this is the WhatsApp tab AND auto-enable is checked
   await applyState(tabId, (isMatch && autoEnable) ? 'ON' : 'OFF');
 });
-
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'toggle') {
