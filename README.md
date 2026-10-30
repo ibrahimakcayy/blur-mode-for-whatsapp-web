@@ -1,5 +1,10 @@
 ## ⚠️ Legal Disclaimer
-This tool is developed for **educational and research purposes only**. Using automated scripts to interact with social media platforms may violate their Terms of Service (ToS). The user is solely responsible for any account restrictions, bans, or legal consequences resulting from the use of this tool. The developer assumes no liability.
+
+Blur Mode is an independent, open-source browser extension and is **not affiliated with, endorsed by, or sponsored by WhatsApp or Meta**. "WhatsApp" is a trademark of its respective owner.
+
+The extension only changes how WhatsApp Web **looks in your own browser** by applying a local CSS blur. It does not send messages, automate actions, read or collect your conversations, or transmit any data. The only data it stores is your own settings (blur intensity, selected elements, auto-enable), kept in `chrome.storage.sync`.
+
+Because WhatsApp Web's interface can change at any time, parts of the extension may stop working without notice. The software is provided "as is", without warranty of any kind (see the [MIT License](#license)). Use it at your own discretion.
 
 # Blur Mode 🫥
 
