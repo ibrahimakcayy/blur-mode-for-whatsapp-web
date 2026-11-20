@@ -16,8 +16,11 @@
     </label>
   </div>
 
-  <label for="blurAmount">Blur intensity (px)</label>
-  <input type="number" id="blurAmount" min="0" max="30" step="1">
+   <div class="range-row">
+    <label for="blurAmount">Blur intensity</label>
+    <span id="blurValue">5px</span>
+  </div>
+  <input type="range" id="blurAmount" min="0" max="30" step="1" value="5">
 
   <div class="selector-group">
     <div class="selector-group-title">Elements to apply blur to</div>
