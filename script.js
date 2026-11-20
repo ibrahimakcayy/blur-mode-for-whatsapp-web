@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   currentTab = tabs[0];
   const settings = await chrome.storage.sync.get(DEFAULTS);
   document.getElementById('blurAmount').value = settings.blurAmount;
+  updateBlurLabel();   // show the saved value next to the slider
   const autoEl = document.getElementById('autoEnable');
   if (autoEl) autoEl.checked = settings.autoEnable;
 
@@ -122,3 +123,12 @@ function showStatus(message, isError = false) {
   el.style.color = isError ? '#ff5c5c' : '#63cb77';
   setTimeout(() => { el.textContent = ''; }, 2000);
 }
+
+//show the current slider value next to the label
+function updateBlurLabel() {
+  const value = document.getElementById('blurAmount').value;
+  document.getElementById('blurValue').textContent = `${value}px`;
+}
+
+//update the label live while the slider is being dragged
+document.getElementById('blurAmount').addEventListener('input', updateBlurLabel);
